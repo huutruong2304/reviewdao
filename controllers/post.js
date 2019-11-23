@@ -59,7 +59,7 @@ router.get('/post/my-articles', auth, async(req, res) => {
 })
 
 //router lấy post cu thể
-router.get('/post/:id', auth, async(req, res) => {
+router.get('/post/:id', async(req, res) => {
     const post = await Post.findOne({ _id: req.params.id, author: req.session.loginInfo.id }).populate('author')
 
     try {
