@@ -60,7 +60,7 @@ router.get('/post/my-articles', auth, async(req, res) => {
 
 //router lấy post cu thể
 router.get('/post/:id', async(req, res) => {
-    const post = await Post.findOne({ _id: req.params.id, author: req.session.loginInfo.id }).populate('author')
+    const post = await Post.findById(req.params.id).populate('author')
 
     try {
         res.status(200).render('post', {
@@ -85,20 +85,26 @@ router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddlewar
     // console.log(req.session.loginInfo.id)
     // console.log(req.file)
 
-    await cloudinary.uploader.upload(req.file.path, async(error, result) => {
-        const newPost = new Post({
-            ...req.body,
-            postBG: result.secure_url,
-            author: req.session.loginInfo.id
+    await cloudinary.uploader.upload(req.file.path, { public_id: "reviewdao/" + req.session.loginInfo.id + "/my_name" },
+        async(error, result) => {
+            if (error) {
+                console.log(error)
+                res.status(404).redirect('/404')
+            }
+            const newPost = new Post({
+                    ...req.body,
+                    postBG: result.secure_url,
+                    author: req.session.loginInfo.id
+                })
+                // console.log(newPost)
+            try {
+                await newPost.save()
+                res.status(200).redirect('/post/' + newPost._id)
+            } catch (error) {
+                console.log(error)
+                res.status(404).redirect('/404')
+            }
         })
-        try {
-            await newPost.save()
-            res.status(200).redirect('/post/' + newPost._id)
-        } catch (error) {
-            console.log(error)
-            res.status(404).redirect('/404')
-        }
-    })
 
 })
 

@@ -6,7 +6,7 @@ const auth = (req, res, next) => {
         }
         next()
     } catch (error) {
-        res.status(401).redirect('/404')
+        res.status(404).redirect('/404')
     }
 }
 
