@@ -28,7 +28,7 @@ router.get('/contact', (req, res) => {
 router.get('/404', (req, res) => {
     res.status(404).render('notfound-404', {
         title: '404 Not found',
-        sttLogin: req.session.sttLogin
+        loginInfo: req.session.sttLogin
     })
 })
 

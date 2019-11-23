@@ -4,6 +4,7 @@ const Post = require('../src/models/post')
 const multer = require('multer')
 const validateStoreMiddleware = require('../src/middleware/storePost')
 const auth = require('../src/middleware/auth')
+const cloudinary = require('cloudinary').v2
 
 const router = new express.Router()
 
@@ -11,9 +12,9 @@ const router = new express.Router()
 
 // config image upload
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'public/img/postImages')
-    },
+    // destination: function(req, file, cb) {
+    //     cb(null, 'public/img/postImages')
+    // },
     filename: function(req, file, cb) {
         cb(null, file.fieldname + '-' + 'vblog' + '-' + Date.now() + '.png')
     }
@@ -82,19 +83,23 @@ router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddlewar
     //đang xử lí lưu ảnh và set ảnh nền
     // create new post
     // console.log(req.session.loginInfo.id)
-    const newPost = new Post({
+    // console.log(req.file)
+
+    await cloudinary.uploader.upload(req.file.path, async(error, result) => {
+        const newPost = new Post({
             ...req.body,
-            postBG: req.file.filename,
+            postBG: result.secure_url,
             author: req.session.loginInfo.id
         })
-        // console.log(newPost)
-        // console.log(newPost)
-    try {
-        await newPost.save()
-        res.status(200).redirect('/post/' + newPost._id)
-    } catch (error) {
-        res.status(404).redirect('/404')
-    }
+        try {
+            await newPost.save()
+            res.status(200).redirect('/post/' + newPost._id)
+        } catch (error) {
+            console.log(error)
+            res.status(404).redirect('/404')
+        }
+    })
+
 })
 
 module.exports = router

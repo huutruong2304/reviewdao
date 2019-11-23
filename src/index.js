@@ -8,6 +8,7 @@ const flash = require('connect-flash')
 // const session = require('express-session')
 const passportConfig = require('./utils/passport')
 const sessionConfig = require('./utils/session')
+require('./utils/cloudinary')
 
 const routerPost = require('../controllers/post')
 const routerBasic = require('../controllers/basic')
