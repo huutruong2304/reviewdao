@@ -4,36 +4,11 @@ const Post = require('../src/models/post')
 const multer = require('multer')
 const validateStoreMiddleware = require('../src/middleware/storePost')
 const auth = require('../src/middleware/auth')
+const upload = require('../src/utils/multer')
 const cloudinary = require('cloudinary').v2
+const formatDate = require('../public/js/datetime')
 
 const router = new express.Router()
-
-
-
-// config image upload
-const storage = multer.diskStorage({
-    // destination: function(req, file, cb) {
-    //     cb(null, 'public/img/postImages')
-    // },
-    filename: function(req, file, cb) {
-        cb(null, file.fieldname + '-' + 'vblog' + '-' + Date.now() + '.png')
-    }
-})
-const upload = multer({
-    // dest: 'public/img/postImages',
-    storage,
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload a image format: .jpg, .jpeg, .png'))
-        }
-        return cb(undefined, true)
-    }
-})
-
-
 
 // lấy trang tạo mới bài viết
 router.get('/post/new', auth, (req, res) => {
@@ -60,7 +35,9 @@ router.get('/post/my-articles', auth, async(req, res) => {
 
 //router lấy post cu thể
 router.get('/post/:id', async(req, res) => {
-    const post = await Post.findById(req.params.id).populate('author')
+    var post = await Post.findById(req.params.id).populate('author')
+        // console.log(formatDate(post.createdAt))
+    post.dateTime = formatDate(post.createdAt)
 
     try {
         res.status(200).render('post', {
@@ -74,23 +51,15 @@ router.get('/post/:id', async(req, res) => {
 
 })
 
-
-
 // trên route thì nó sẽ chạy từ trái qua phải. cái nào để trước thì chạy trước, cái nào để sau thì chạy sau
 router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddleware, async(req, res) => {
-    // const postBG = await sharp(req.file.filename).resize({ width: 1000, height: 600 }).png()
-    // hiển thị background-image trong file createpost.hbs
-    //đang xử lí lưu ảnh và set ảnh nền
-    // create new post
-    // console.log(req.session.loginInfo.id)
-    // console.log(req.file)
-
     await cloudinary.uploader.upload(req.file.path, { public_id: "reviewdao/" + req.session.loginInfo.id + "/my_name" },
         async(error, result) => {
             if (error) {
                 console.log(error)
                 res.status(404).redirect('/404')
             }
+
             const newPost = new Post({
                     ...req.body,
                     postBG: result.secure_url,
@@ -101,11 +70,10 @@ router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddlewar
                 await newPost.save()
                 res.status(200).redirect('/post/' + newPost._id)
             } catch (error) {
-                console.log(error)
                 res.status(404).redirect('/404')
             }
-        })
-
+        }
+    )
 })
 
 module.exports = router

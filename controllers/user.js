@@ -62,7 +62,8 @@ module.exports = (passport) => {
             id: me._id,
             username: me.username
         }
-        console.log(req.session.loginInfo)
+
+        // console.log(req.session.loginInfo)
         res.status(200).render('me', {
             title: 'About me',
             user: {
