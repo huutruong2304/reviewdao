@@ -13,6 +13,7 @@ const router = new express.Router()
 // lấy trang tạo mới bài viết
 router.get('/post/new', auth, (req, res) => {
     res.render('createPost', {
+        name: process.env.WS_NAME,
         title: 'Create new post',
         loginInfo: req.session.loginInfo
     })
@@ -24,6 +25,7 @@ router.get('/post/my-articles', auth, async(req, res) => {
 
     try {
         res.status(200).render('my-articles', {
+            name: process.env.WS_NAME,
             title: 'My articles',
             allPost,
             loginInfo: req.session.loginInfo
@@ -41,6 +43,7 @@ router.get('/post/:id', async(req, res) => {
 
     try {
         res.status(200).render('post', {
+            name: process.env.WS_NAME,
             title: post.title.substr(0, 26) + '...',
             post,
             loginInfo: req.session.loginInfo
