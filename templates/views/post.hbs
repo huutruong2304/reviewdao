@@ -34,15 +34,18 @@
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('{{post.postBG}}')">
     <div class="overlay"></div>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
             <h1>{{post.title}}</h1>
-            <h2 class="subheading">{{post.description}}</h2>
-            <span class="meta">Posted by
-              <a href="#">{{post.author.username}}</a>
-              on {{post.dateTime}}</span>
+            {{!-- <h4 class="subheading">{{post.description}}</h4> --}}
+            <small>
+              <span class="meta">Premiered
+                {{!-- <a href="#">{{post.author.username}}</a> --}}
+                {{post.dateTime}}</span>
+            </small>
+
           </div>
         </div>
       </div>

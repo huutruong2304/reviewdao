@@ -23,7 +23,7 @@ const formatDateFull = (date) => {
     // console.log(date)
     var value = dateConfig(date)
         // console.log(value)
-    return value.time24h_short + ', ' + value.date_2digit + '-' + value.numberMonth_2digit + '-' + value.year_2digit
+    return value.time24h_short + ' ' + value.shortMonth + ' ' + value.date + ', ' + value.year
 }
 
 module.exports = formatDateFull

@@ -2,7 +2,7 @@ const auth = (req, res, next) => {
     try {
         // console.log(req.session.passport.user)
         if (!req.isAuthenticated()) {
-            return res.redirect('/404') //nhớ return 
+            return res.redirect('/user/login') //nhớ return 
         }
         next()
     } catch (error) {

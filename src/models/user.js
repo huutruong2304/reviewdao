@@ -22,6 +22,26 @@ const userSchema = new mongoose.Schema({
             required: true,
             minlength: [6, 'Your password cannot be shorter than 6 characters'],
             trim: true
+        },
+        address: {
+            type: String,
+            required: true,
+            maxlength: [100, 'Your address cannot be longer than 100 characters']
+        },
+        lastName: {
+            type: String,
+            required: true
+        },
+        firstName: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            maxlength: [200, 'Your description cannot be longer than 100 characters']
+        },
+        avatar: {
+            type: String,
         }
     }, {
         timestamps: true
@@ -35,7 +55,15 @@ const userSchema = new mongoose.Schema({
     //     }
     // )
 
+userSchema.virtual('fullName').get(function() {
+    return this.firstName + ' ' + this.lastName
+})
 
+userSchema.virtual('fullName').set(function(name) {
+    let str = name.split(' ')
+    this.firstName = str[0]
+    this.lastName = str[1]
+})
 
 // giấu/ giới hạn loại dữ liệu được trả về dưới dạng JSON 
 userSchema.methods.toJSON = function() {

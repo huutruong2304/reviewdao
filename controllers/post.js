@@ -21,13 +21,13 @@ router.get('/post/new', auth, (req, res) => {
 
 //lấy toàn bộ bài viết của 1 author
 router.get('/post/my-articles', auth, async(req, res) => {
-    const allPost = await Post.find({ author: req.session.loginInfo.id })
+    var posts = await Post.find({ author: req.session.loginInfo.id }).sort({ updatedAt: -1 })
 
     try {
         res.status(200).render('my-articles', {
             name: process.env.WS_NAME,
             title: 'My articles',
-            allPost,
+            posts,
             loginInfo: req.session.loginInfo
         })
     } catch (error) {
@@ -35,11 +35,13 @@ router.get('/post/my-articles', auth, async(req, res) => {
     }
 })
 
+
+
 //router lấy post cu thể
 router.get('/post/:id', async(req, res) => {
-    var post = await Post.findById(req.params.id).populate('author')
+    const post = await Post.findById(req.params.id).populate('author')
         // console.log(formatDate(post.createdAt))
-    post.dateTime = formatDate(post.createdAt)
+    post.dateTime = formatDate(post.updatedAt)
 
     try {
         res.status(200).render('post', {
@@ -51,7 +53,6 @@ router.get('/post/:id', async(req, res) => {
     } catch (error) {
         res.status(404).redirect('/404')
     }
-
 })
 
 // trên route thì nó sẽ chạy từ trái qua phải. cái nào để trước thì chạy trước, cái nào để sau thì chạy sau
@@ -78,5 +79,20 @@ router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddlewar
         }
     )
 })
+
+//xóa post của mình
+router.delete('/post/delete/:id', auth, async(req, res) => {
+    try {
+        const post = await Post.findOneAndDelete({ _id: req.params.id, author: req.session.loginInfo.id })
+
+        if (!post) {
+            return res.status(404).redirect('/404')
+        }
+        return res.status(200).send('OK!')
+    } catch (error) {
+        throw new Error("Can't delete it.")
+    }
+})
+
 
 module.exports = router
