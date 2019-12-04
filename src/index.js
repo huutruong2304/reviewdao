@@ -42,9 +42,10 @@ app.use(passport.session())
 passportConfig(passport)
 
 // use router post
-app.use(routerBasic)
 app.use(routerUser(passport))
 app.use(routerPost)
+app.use(routerBasic)
+
 
 
 app.listen(port, () => {

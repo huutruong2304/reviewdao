@@ -13,6 +13,7 @@ router.get('/', async(req, res) => {
     posts.forEach(x => {
         x.datetime = formatDate(x.updatedAt)
     })
+
     const pagination = {
         curPage,
         amountPage
@@ -31,33 +32,6 @@ router.get('/', async(req, res) => {
         res.status(404).redirect('/404')
     }
 })
-
-// //pagination trang home
-// router.get('/:pageNumber', async(req, res) => {
-//     const curPage = req.params.pageNumber
-//     const amountPage = Math.ceil(await Post.find().estimatedDocumentCount() / 10)
-//     const posts = await Post.find().sort({ updatedAt: -1 }).limit(10).skip(10 * (curPage - 1))
-//     const pagination = {
-//         curPage,
-//         amountPage
-//     }
-
-//     // console.log(req.session.loginInfo)
-//     try {
-//         res.render('index', {
-//             name: process.env.WS_NAME,
-//             title: 'Trang chuyên review công nghệ',
-//             loginInfo: req.session.loginInfo,
-//             posts,
-//             pagination
-//         })
-//     } catch (error) {
-//         console.log({ error })
-//         res.status(404).redirect('/404')
-//     }
-// })
-
-
 
 
 router.get('/about', (req, res) => {
@@ -82,6 +56,8 @@ router.get('/404', (req, res) => {
         loginInfo: req.session.sttLogin
     })
 })
-
+router.get('/*', (req, res) => {
+    res.redirect('/user/login')
+})
 
 module.exports = router

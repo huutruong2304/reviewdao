@@ -22,27 +22,27 @@ const userSchema = new mongoose.Schema({
             required: true,
             minlength: [6, 'Your password cannot be shorter than 6 characters'],
             trim: true
-        },
-        address: {
-            type: String,
-            required: true,
-            maxlength: [100, 'Your address cannot be longer than 100 characters']
-        },
-        lastName: {
-            type: String,
-            required: true
-        },
-        firstName: {
-            type: String,
-            required: true
-        },
-        description: {
-            type: String,
-            maxlength: [200, 'Your description cannot be longer than 100 characters']
-        },
-        avatar: {
-            type: String,
         }
+        // address: {
+        //     type: String,
+        //     required: true,
+        //     maxlength: [100, 'Your address cannot be longer than 100 characters']
+        // },
+        // lastName: {
+        //     type: String,
+        //     required: true
+        // },
+        // firstName: {
+        //     type: String,
+        //     required: true
+        // },
+        // description: {
+        //     type: String,
+        //     maxlength: [200, 'Your description cannot be longer than 100 characters']
+        // },
+        // avatar: {
+        //     type: String,
+        // }
     }, {
         timestamps: true
     })

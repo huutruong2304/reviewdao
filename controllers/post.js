@@ -10,6 +10,8 @@ const formatDate = require('../public/js/datetime')
 
 const router = new express.Router()
 
+
+//phần này chỉ có admin mới thao tác được
 // lấy trang tạo mới bài viết
 router.get('/post/new', auth, (req, res) => {
     res.render('createPost', {
@@ -21,7 +23,8 @@ router.get('/post/new', auth, (req, res) => {
 
 //lấy toàn bộ bài viết của 1 author
 router.get('/post/my-articles', auth, async(req, res) => {
-    var posts = await Post.find({ author: req.session.loginInfo.id }).sort({ updatedAt: -1 })
+    const posts = await Post.find({ author: req.session.loginInfo.id }).sort({ updatedAt: -1 })
+    console.log(req.session.loginInfo)
 
     try {
         res.status(200).render('my-articles', {
@@ -57,27 +60,44 @@ router.get('/post/:id', async(req, res) => {
 
 // trên route thì nó sẽ chạy từ trái qua phải. cái nào để trước thì chạy trước, cái nào để sau thì chạy sau
 router.post('/post/store', auth, upload.single('postBG'), validateStoreMiddleware, async(req, res) => {
-    await cloudinary.uploader.upload(req.file.path, { public_id: "reviewdao/" + req.session.loginInfo.id + "/my_name" },
-        async(error, result) => {
-            if (error) {
-                console.log(error)
-                res.status(404).redirect('/404')
-            }
 
-            const newPost = new Post({
-                    ...req.body,
-                    postBG: result.secure_url,
-                    author: req.session.loginInfo.id
-                })
-                // console.log(newPost)
-            try {
-                await newPost.save()
-                res.status(200).redirect('/post/' + newPost._id)
-            } catch (error) {
-                res.status(404).redirect('/404')
+    if (req.file) {
+        await cloudinary.uploader.upload(req.file.path, { public_id: "reviewdao/" + req.session.loginInfo.id + "/my_name" },
+            async(error, result) => {
+                if (error) {
+                    console.log(error)
+                    res.status(404).redirect('/404')
+                }
+
+                const newPost = new Post({
+                        ...req.body,
+                        postBG: result.secure_url,
+                        author: req.session.loginInfo.id
+                    })
+                    // console.log(newPost)
+                try {
+                    await newPost.save()
+                    res.status(200).redirect('/post/' + newPost._id)
+                } catch (error) {
+                    res.status(404).redirect('/404')
+                }
             }
+        )
+    } else {
+        const newPost = new Post({
+                ...req.body,
+                postBG: "https://res.cloudinary.com/nran-234/image/upload/v1575294118/reviewdao/image-bg-if-null.jpg",
+                author: req.session.loginInfo.id
+            })
+            // console.log(newPost)
+        try {
+            await newPost.save()
+            res.status(200).redirect('/post/' + newPost._id)
+        } catch (error) {
+            res.status(404).redirect('/404')
         }
-    )
+    }
+
 })
 
 //xóa post của mình
