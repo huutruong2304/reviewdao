@@ -13,6 +13,7 @@ require('./utils/cloudinary')
 const routerPost = require('../controllers/post')
 const routerBasic = require('../controllers/basic')
 const routerUser = require('../controllers/user')
+const routerCategory = require('../controllers/category')
 
 //connect to DB
 require('./db/mongoose')
@@ -44,6 +45,7 @@ passportConfig(passport)
 // use router post
 app.use(routerUser(passport))
 app.use(routerPost)
+app.use(routerCategory)
 app.use(routerBasic)
 
 

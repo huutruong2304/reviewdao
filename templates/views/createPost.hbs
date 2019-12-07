@@ -90,6 +90,11 @@
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
+                     <div class="form-group w-50">
+                        <label for="category">Thể loại</label>
+                        <select class="form-control" id="category" name="category">
+                        </select>
+                    </div>
                     <div class="control-group">
                         <div class="form-group floating-label-form-group controls">
                             <label>Post background</label>
@@ -97,8 +102,9 @@
                             {{!-- <p class="help-block text-danger"></p> --}}
                         </div>
                     </div>
+                   
                     <br>
-                    <div id="success"></div>
+                    {{!-- <div id="success"></div> --}}
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary " id="createPostButton">Create</button>
                     </div>
@@ -117,6 +123,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.js"></script>
     <!-- Custom scripts for this template -->
     <script src="/js/clean-blog.min.js"></script>
+    <script src="/js/ajax.js"></script>
     <script>
         $('#content').summernote({
             placeholder: 'Hello stand alone ui',

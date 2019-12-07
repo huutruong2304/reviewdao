@@ -22,7 +22,24 @@
     rel='stylesheet' type='text/css'>
 
   <!-- Custom styles for this template -->
+
   <link href="/css/clean-blog.min.css" rel="stylesheet">
+
+  <style>
+    .avatar {
+      width: 70%;
+      float: right;
+    }
+
+    .btn {
+      padding: 10px;
+      cursor: pointer !important;
+    }
+
+    small {
+      display: block;
+    }
+  </style>
 
 </head>
 
@@ -41,7 +58,7 @@
             <h1>{{post.title}}</h1>
             {{!-- <h4 class="subheading">{{post.description}}</h4> --}}
             <small>
-              <span class="meta">Premiered
+              <span class="meta">Ngày đăng
                 {{!-- <a href="#">{{post.author.username}}</a> --}}
                 {{post.dateTime}}</span>
             </small>
@@ -59,25 +76,139 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           {{{post.content}}}
           {{!-- <img src="data:image/png;base64,{{post.postBG}}" alt=""> --}}
+          <div class="float-right sharing">
+            <h6>Chia sẻ bài viết</h6>
+            <button class="btn btn-sm btn-primary float-right "><i class="fab fa-facebook-f"></i></button>
+            {{!-- <button class="btn-success"></button> --}}
+          </div>
+          {{!-- <hr class="border-secondary"> --}}
         </div>
+
       </div>
+
     </div>
   </article>
 
-  <hr>
-
-  <!-- Footer -->
-  {{>footer}}
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="/vendor/jquery/jquery.min.js"></script>
-  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/Vblog/public/js/datetime.js"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="/js/clean-blog.min.js"></script>
 
 
+
+  <div class="container mt-4">
+    <h2 class="text-left">Bình luận</h2>
+    <div class="card border-0">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2">
+            <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img-thumbnail border-0 avatar" />
+          </div>
+          <div class="col-md-9 pt-3">
+            <form action="/post/comments/{{post.id}}" method="POST">
+              <div class="form-row">
+                <div class="col">
+                  <input type="text" class="form-control mb-2" placeholder="Tên hiển thị" maxlength="15" required
+                    name="username">
+                </div>
+                <div class="col">
+                  <input type="email" class="form-control mb-2" placeholder="Email" required name="email">
+                </div>
+              </div>
+              <textarea class="m-0 form-control" rows='2' placeholder="Nội dung..." required maxlength="500"
+                minlength="3" name="content"></textarea>
+
+              <button class="btn btn-dark text-light my-2 "> <i class="fa fa-share"></i> Gửi</button>
+            </form>
+            {{!-- <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a> --}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{#each post.comments}}
+    <div class="card border-0">
+      {{!-- {{#each comment}} --}}
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2">
+            <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img-thumbnail border-0 avatar" />
+          </div>
+          <div class="col-md-9 pt-3">
+            <p class="m-0"><strong>{{comment.[0].username}}</strong> </p>
+            <small class="m-0">{{comment.[0].content}}</small>
+            <button class="btn btn-dark text-light my-2" data-toggle="collapse" data-target="#collapse{{id}}"
+              aria-expanded="false" aria-controls="collapseExample"> <i class="fa fa-reply"></i>
+              Phản hồi</button>
+          </div>
+        </div>
+        {{!-- replires --}}
+        {{#each comment}}
+        {{#if first }}
+        {{else}}
+        <div class="card card-inner border-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-2">
+                <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img-thumbnail border-0 avatar" />
+              </div>
+              <div class="col-md-8 pt-3">
+                <p class="m-0"><strong>{{username}}</strong></p>
+                <small class="m-0">{{content}}
+                </small>
+                {{!-- <button class="btn btn-dark text-light my-2"> <i class="fa fa-reply" data-toggle="collapse"
+              data-target="#collapse{{}}" aria-expanded="false" aria-controls="collapseExample"></i> Reply</button> --}}
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/if}}
+        {{/each}}
+        {{!-- form reply --}}
+        <div class="card card-inner border-0 collapse" id="collapse{{id}}">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-9 pt-3">
+                <form action="/post/comments/comment/replies/{{../post.id}}_{{id}}" method="POST">
+                  <div class="form-row">
+                    <div class="col">
+                      <input type="text" class="form-control mb-2" placeholder="Tên hiển thị" maxlength="15" required
+                        name="username">
+                    </div>
+                    <div class="col">
+                      <input type="email" class="form-control mb-2" placeholder="Email" required name="email">
+                    </div>
+                  </div>
+                  <textarea class="m-0 form-control" rows='2' placeholder="Nội dung..." required maxlength="500"
+                    minlength="3" name="content"></textarea>
+                  <button class="btn btn-dark text-light my-2 float-right"> <i class="fa fa-share"></i> Gửi</button>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{/each}}
+
+
+
+    <!-- Footer -->
+    {{>footer}}
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/Vblog/public/js/datetime.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="/js/clean-blog.min.js"></script>
+    <script src="/js/ajax.js"></script>
+
+    <script>
+
+    </script>
 
 
 

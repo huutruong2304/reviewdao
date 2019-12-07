@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
         author: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            ref: 'User'
+            ref: 'Users'
         },
         title: {
             type: String,
@@ -24,13 +24,41 @@ const postSchema = new mongoose.Schema({
         },
         postBG: {
             type: String
+        },
+        comments: [{
+            comment: [{
+                email: {
+                    type: String,
+                    required: true
+                },
+                username: {
+                    type: String,
+                    required: true
+                },
+                content: {
+                    type: String,
+                    required: true
+                },
+                first: {
+                    type: Boolean
+                }
+            }]
+        }],
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Categories'
+        },
+        views: {
+            type: Number,
+            default: 0
         }
     }, {
         timestamps: true
     })
     // postSchema.set('description',())
 
-const Post = mongoose.model('Post', postSchema)
+const Post = mongoose.model('Posts', postSchema)
 
 
 module.exports = Post

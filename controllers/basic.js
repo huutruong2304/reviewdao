@@ -7,12 +7,13 @@ const router = new express.Router()
 //lấy trang chủ
 router.get('/', async(req, res) => {
     const curPage = req.query.pageNumber ? parseInt(req.query.pageNumber) : 1
-    const amountPage = Math.ceil(await Post.find().estimatedDocumentCount() / 10)
+    const amountPage = Math.ceil(await Post.estimatedDocumentCount() / 10)
     const posts = await Post.find().sort({ updatedAt: -1 }).limit(10).skip(10 * (curPage - 1))
         // posts.dateTime = formatDate(posts.createdAt)
     posts.forEach(x => {
         x.datetime = formatDate(x.updatedAt)
     })
+
 
     const pagination = {
         curPage,
@@ -57,7 +58,7 @@ router.get('/404', (req, res) => {
     })
 })
 router.get('/*', (req, res) => {
-    res.redirect('/user/login')
+    res.redirect('/')
 })
 
 module.exports = router

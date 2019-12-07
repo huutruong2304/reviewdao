@@ -1,4 +1,16 @@
 $(document).ready(function() {
+    $.ajax({
+        type: 'GET',
+        url: '/category',
+        success: function(data) {
+            // $('.navbar-nav').append()
+            data.map(ele => {
+                $('.navbar-nav').append(`<li class="nav-item"><a class="nav-link" href="/danhmuc/${ele.link}">${ele.name}</a></li>`)
+                $('#category').append(`<option value='${ele._id}'>${ele.name}</option>`)
+            })
+
+        }
+    })
     $('.btn-del').click(function(e) {
         $target = $(e.target);
         var id = $target.attr('data-id');
