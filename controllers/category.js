@@ -1,6 +1,7 @@
 const express = require('express')
 const Category = require('../src/models/category')
 const bodau = require('../src/utils/bodau')
+const auth = require('../src/middleware/auth')
 
 
 const router = new express.Router()
@@ -15,7 +16,7 @@ router.get('/category', async(req, res) => {
     }
 })
 
-router.post('/category', async(req, res) => {
+router.post('/category', auth, async(req, res) => {
     const category = await new Category({
         name: req.body.name.toLowerCase()
     })
